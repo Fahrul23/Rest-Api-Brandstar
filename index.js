@@ -15,9 +15,6 @@ app.use(function (req, res, next) {
     next();
 });
 
-const user = {
-    name : 'fahrul'
-}
 
 app.use(bodyParser.json());
 
@@ -27,7 +24,7 @@ app.use('/v1/product', productRoutes)
 // app.use('/v1/product',productRoutes);
 
 
-app.listen(4000,() => console.log('connect'))
+app.listen(4000,() => console.log('server running'))
 
 
 

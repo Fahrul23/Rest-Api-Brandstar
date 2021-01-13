@@ -1,17 +1,41 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const router = express.Router();
 const app = express();
 
+const productRoutes = require('./src/routes/product');
+
+app.use(function (req, res, next) {
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    next();
+});
+
+const user = {
+    name : 'fahrul'
+}
 
 app.use(bodyParser.json());
 
-let user ={
-    name: "fahrul",
-    nim:"12174964"
-}
 
-app.get('/', function (req, res) {
-    res.json(user)
-})
+app.use('/v1/product', productRoutes)
+
+// app.use('/v1/product',productRoutes);
+
 
 app.listen(4000,() => console.log('connect'))
+
+
+
+
+
+
+
+
+
+
+

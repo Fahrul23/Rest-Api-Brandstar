@@ -1,8 +1,7 @@
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const express = require('express');
-const router = express.Router();
 const app = express();
-
 const productRoutes = require('./src/routes/product');
 
 app.use(function (req, res, next) {
@@ -32,10 +31,14 @@ app.use((error, req,res,next)=>{
     });
 })
 
-// app.use('/v1/product',productRoutes);
-
-
-app.listen(4000,() => console.log('server running'))
+mongoose.connect('mongodb://localhost/product',{ 
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(()=>{
+    app.listen(4000,() => console.log('server running'))
+})
+.catch(err => console.log(err));
 
 
 

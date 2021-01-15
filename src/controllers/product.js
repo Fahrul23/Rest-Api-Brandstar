@@ -1,4 +1,5 @@
 const { validationResult } = require("express-validator");
+const ProductModel = require('../model/product');
 
 exports.getAllProduct=(req,res,next) =>{
     
@@ -28,19 +29,25 @@ exports.createProduct= (req,res,next)=>{
     
     const name = req.body.name;
     const price = req.body.price;
+    const image = 'image.jpg';
+    const desc = req.body.description
     
-    const result ={
-        message : 'Create Product Success!!!',
-            data: {
-                id : 1,
-                name: name,
-                price: price,
-                created_at : "12/06/2020"
-            }
-    }
+    
+    const createProduct = new ProductModel({
+        name : name,
+        price: price,
+        image: image,
+        description : desc
+    });
 
-    res.status(201).json(result);
+    createProduct.save()
+    .then(result =>{
+        res.status(201).json({
+            message : 'Create Product Success!!!',
+            data: result     
+        });
+    })
+    .catch(err => console.log(err))
     
-    next();
 
 }

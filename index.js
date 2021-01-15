@@ -31,14 +31,16 @@ app.use((error, req,res,next)=>{
     });
 })
 
-mongoose.connect('mongodb://localhost/product',{ 
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+mongoose.connect('mongodb://localhost/product',
+    {useNewUrlParser: true, useUnifiedTopology: true}
+)
 .then(()=>{
-    app.listen(4000,() => console.log('server running'))
+    app.listen(4000,()=> console.log('server running'))
 })
 .catch(err => console.log(err));
+
+
+
 
 
 

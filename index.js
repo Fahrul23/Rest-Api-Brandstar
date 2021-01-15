@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
 const productRoutes = require('./src/routes/product');
+var multer  = require('multer');
 
 app.use(function (req, res, next) {
 
@@ -15,6 +16,29 @@ app.use(function (req, res, next) {
 });
 
 
+const filestorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'images');
+    },
+    filename: function (req, file, cb) {
+      cb(null, new Date().getTime() + '-' + file.originalname)
+    }
+  })
+
+  const fileFilter = (req,file,cb) =>{
+      if(
+          file.mimetype === 'image/png' ||
+          file.mimetype === 'image/jpg' ||
+          file.mimetype === 'image/jpeg' 
+      ){
+          cb(null,true);
+      }else{
+          cb(null,false);
+      }
+  }
+
+app.use(multer({storage : filestorage, fileFilter:fileFilter}).single('image'))
+  
 app.use(bodyParser.json());
 
 app.use('/v1/product', productRoutes);

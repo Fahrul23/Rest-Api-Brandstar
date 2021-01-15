@@ -26,10 +26,16 @@ exports.createProduct= (req,res,next)=>{
        err.data = errors.array();
        throw err;
     }
+    if(!req.file){
+       const err = new Error('Image must be uploaded');
+       err.errorStatus = 400;
+       err.data = errors.array();
+       throw err;
+    }
     
     const name = req.body.name;
     const price = req.body.price;
-    const image = 'image.jpg';
+    const image = req.file.path;
     const desc = req.body.description
     
     

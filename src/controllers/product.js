@@ -15,6 +15,25 @@ exports.getAllProduct=(req,res,next) =>{
     });
 }
 
+exports.getProductById=(req,res,next)=>{
+    ProductModel.findById(req.params.id)
+    .then(result =>{
+
+        if(!result){
+            const err = new Error()
+            err.errorStatus=404;
+            throw error;
+        }
+        res.status(200).json({
+            message: 'Get Product By Id Success!!!',
+            data:result
+        })
+    })
+    .catch(err => {
+        next(err);
+    })
+}
+
 exports.createProduct= (req,res,next)=>{
     
     const errors = validationResult(req);

@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const productRoutes = require('./src/routes/product');
 var multer  = require('multer');
+const path =require('path');
 
 app.use(function (req, res, next) {
 
@@ -40,6 +41,8 @@ const filestorage = multer.diskStorage({
 app.use(multer({storage : filestorage, fileFilter:fileFilter}).single('image'))
   
 app.use(bodyParser.json());
+
+app.use('/images', express.static(path.join(__dirname,'images')))
 
 app.use('/v1/product', productRoutes);
 

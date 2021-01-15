@@ -3,17 +3,16 @@ const ProductModel = require('../model/product');
 
 exports.getAllProduct=(req,res,next) =>{
     
-    const result ={
-        message: 'All Product Success',
-        data:{
-            name: 'pot putih',
-            price: 20000
-        }
-    }
-
-    res.status(200).json(result);
-    next();
-    
+    ProductModel.find()
+    .then(result =>{
+        res.status(200).json({
+            message : 'Get All Product Success!!!',
+            data: result     
+        });        
+    })
+    .catch(err => {
+        next(err);
+    });
 }
 
 exports.createProduct= (req,res,next)=>{
@@ -26,6 +25,7 @@ exports.createProduct= (req,res,next)=>{
        err.data = errors.array();
        throw err;
     }
+
     if(!req.file){
        const err = new Error('Image must be uploaded');
        err.errorStatus = 400;

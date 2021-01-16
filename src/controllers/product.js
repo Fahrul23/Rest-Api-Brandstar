@@ -16,7 +16,7 @@ exports.getAllProduct=(req,res,next) =>{
 }
 
 exports.getProductById=(req,res,next)=>{
-    ProductModel.findById(req.params.id)
+    ProductModel.findById(res.params.id)
     .then(result =>{
 
         if(!result){
@@ -74,5 +74,54 @@ exports.createProduct= (req,res,next)=>{
     })
     .catch(err => console.log(err))
     
+}
+
+exports.updateProduct=(req,res,next) =>{
+    
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+       const err = new Error('Invalid Value');
+       err.errorStatus = 400;
+       err.data = errors.array();
+       throw err;
+    }
+
+    if(!req.file){
+       const err = new Error('Image must be uploaded');
+       err.errorStatus = 400;
+       err.data = errors.array();
+       throw err;
+    }
+    
+    const name = req.body.name;
+    const price = req.body.price;
+    const image = req.file.path;
+    const desc = req.body.description;
+    const ProductId = req.params.id
+
+    ProductModel.findById(ProductId)
+    .then(product =>{
+        if(!product){
+            const err = new Error('Product tidak ditemukan');
+            err.errorStatus = 404;
+            throw error
+        }
+        product.name = name;
+        product.price = price;
+        product.image = image;
+        product.desc=desc;
+        
+        return product.save()
+    })
+    .then(result =>{
+        res.status(202).json({
+            message : 'Update Product Success!!',
+            data:result
+        })
+    })
+    .catch(err => {
+        next(err)
+    })
 
 }

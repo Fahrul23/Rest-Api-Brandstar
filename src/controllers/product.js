@@ -1,5 +1,7 @@
 const { validationResult } = require("express-validator");
 const ProductModel = require('../model/product');
+const path = require('path');
+const fs = require('fs');
 
 exports.getAllProduct=(req,res,next) =>{
     
@@ -125,3 +127,35 @@ exports.updateProduct=(req,res,next) =>{
     })
 
 }
+
+exports.deleteProduct = (req,res,next) =>{
+    const ProductId= req.params.id;
+
+    ProductModel.findById(ProductId)
+    .then(product =>{
+        if(!product){
+            const err = new Error('Product not Found');
+            err.errorStatus = 404;
+            throw error;
+        }
+        removeImage(product.image);
+        
+        return ProductModel.findByIdAndDelete(ProductId);
+    })
+    .then(result =>{
+        res.status(200).json({
+            message: 'Delete Product Success',
+            data: result
+        })
+    })
+    .catch(err =>{
+        next(err)
+    })
+}
+
+const removeImage = (filePath)=>{
+    filePath = path.join(__dirname,'../../',filePath); 
+    fs.unlink(filePath, err => console.log(err));
+}
+
+

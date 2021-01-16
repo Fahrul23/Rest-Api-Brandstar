@@ -16,5 +16,5 @@ router.put('/update/:id',[
     body('price').isLength({ min: 5 }).withMessage('must be at least 5 chars long'),
     body('description').isLength({ min: 5 }).withMessage('must be at least 5 chars long')],
     productController.updateProduct)
-
+router.delete('/delete/:id',productController.deleteProduct)
 module.exports = router;

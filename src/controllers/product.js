@@ -5,16 +5,31 @@ const fs = require('fs');
 
 exports.getAllProduct=(req,res,next) =>{
     
+    const currentPage = req.query.page || 1;
+    const perPage= req.query.perPage || 5;
+    let totalItems;
+    
     ProductModel.find()
+    .countDocuments()
+    .then(count =>{
+        totalItems = count;
+        return ProductModel.find()
+        .skip((parseInt(currentPage) - 1) * parseInt(perPage))
+        .limit(parseInt(perPage));
+    })
     .then(result =>{
         res.status(200).json({
             message : 'Get All Product Success!!!',
-            data: result     
+            data: result,
+            total_data : totalItems,
+            per_page : perPage,
+            current_page : currentPage,     
         });        
     })
-    .catch(err => {
-        next(err);
-    });
+    .catch(err =>{
+        next(err)
+    })
+
 }
 
 exports.getProductById=(req,res,next)=>{
